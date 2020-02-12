@@ -3,13 +3,22 @@ body {
   box-sizing: border-box;
 }
 .JeuContainer {
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
   h1 {
     color: #000;
     border: #7ca9d9 1px solid;
     text-align: center;
     text-transform: uppercase;
+    width: 30%;
   }
   .PenduClavier {
+    width: 50%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
