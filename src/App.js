@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.scss";
 import Clavier from "./components/Clavier";
-// import Devinette from "./components/Devinette";
 
 function App() {
-  const HIDE_LETTER = "_";
+  const [count, setCount] = useState(0);
+  const [points, setPoints] = useState(0);
+  const [letterWord, setLettersWord] = useState([]);
+  const [clickedLetters, setClickedLetters] = useState([]);
+  const [won, setWon] = useState("");
 
   // get the ABC
-  const letters = [
+  const alphabet = [
     "A",
     "B",
     "C",
@@ -36,56 +39,64 @@ function App() {
     "Z"
   ];
   // Generate random words
-  let words = [
+  let wordsArray = [
     "ALLUMETTE",
     "CIGARETTE",
     "BIERE",
     "TOMATE",
     "POMMES",
     "POIRE",
-    "VOITURE"
+    "VOITURE",
+    "APPLE"
   ];
-  // get random word from array
-  let guessWord = words[Math.floor(Math.random() * words.length)];
 
-  // Get each letter separately
-  const input = guessWord;
-  let output = [];
-  output = [...input.split("").join(" ")];
-
-  // Show or not letter if matched
-  let letterClicked = [];
-  const handleLetterClick = letter => {
-    letterClicked.push(letter);
-    // letterClickeds.includes(letter) ? letter === letterClicked : letter === "_";
+  // generate Word
+  const generateWord = () => {
+    let word = wordsArray[Math.floor(Math.random() * wordsArray.length)];
+    setLettersWord([...word.split("")]);
   };
-  console.log(output);
+  // get random word from array words
+  useEffect(() => {
+    generateWord();
+  }, []);
 
+  //onClick compare the letters, if matched show letter bg green, if not bg red
+  const handleClick = letter => {
+    setClickedLetters(clickedLetters => [...clickedLetters, letter]);
+  };
+
+  const handleReset = evt => {
+    generateWord();
+    setClickedLetters([]);
+  };
+
+  const renderWord = (letterWord, clickedLetters) => {
+    return letterWord.map(letter =>
+      clickedLetters.includes(letter) ? letter : "_"
+    );
+  };
+  console.log(letterWord);
   return (
     <div className="JeuContainer">
       <h1>Jeu du Pendu React</h1>
+      <span>Tries: {count}</span>
+      <span>Points : {points}</span>
       <div className="PenduDevinette">
-        {letterClicked.includes(letters)
-          ? output.map((w, index) => (
-              <span className="wordTitle" key={index}>
-                {w}
-              </span>
-            ))
-          : output.map((w, index) => (
-              <span className="wordTitle" key={index}>
-                _
-              </span>
-            ))}
+        <span className="wordTitle">
+          {renderWord(letterWord, clickedLetters)}
+        </span>
       </div>
+      {/* Clavier */}
       <div className="PenduClavier">
-        {letters.map((letter, index) => (
+        {alphabet.map((letter, index) => (
           <Clavier
             key={index}
             letters={letter}
-            onClick={() => handleLetterClick(letter)}
+            onClick={evt => handleClick(letter)}
           />
         ))}
       </div>
+      <button onClick={handleReset}>Reset</button>
     </div>
   );
 }
