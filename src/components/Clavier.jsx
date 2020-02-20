@@ -1,8 +1,12 @@
 import React from "react";
 
-export default function Clavier({ letters, onClick }) {
+export default function Clavier({ letters, onClick, bgColor }) {
   return (
-    <div className="letters" onClick={onClick}>
+    <div
+      className="letters"
+      onClick={onClick}
+      style={{ backgroundColor: `${bgColor}` }}
+    >
       <span>{letters}</span>
     </div>
   );

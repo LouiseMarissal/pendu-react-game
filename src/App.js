@@ -7,7 +7,7 @@ function App() {
   const [points, setPoints] = useState(0);
   const [letterWord, setLettersWord] = useState([]);
   const [clickedLetters, setClickedLetters] = useState([]);
-  const [won, setWon] = useState("");
+  const [bgColor, setBgColor] = useState("#FFF");
 
   // get the ABC
   const alphabet = [
@@ -55,6 +55,7 @@ function App() {
     let word = wordsArray[Math.floor(Math.random() * wordsArray.length)];
     setLettersWord([...word.split("")]);
   };
+
   // get random word from array words
   useEffect(() => {
     generateWord();
@@ -63,11 +64,15 @@ function App() {
   //onClick compare the letters, if matched show letter bg green, if not bg red
   const handleClick = letter => {
     setClickedLetters(clickedLetters => [...clickedLetters, letter]);
+    setCount(count => count + 1);
+    letterWord.includes(letter) ? setPoints(points + 2) : setPoints(points - 2);
   };
 
   const handleReset = evt => {
     generateWord();
     setClickedLetters([]);
+    setCount(0);
+    setPoints(0);
   };
 
   const renderWord = (letterWord, clickedLetters) => {
@@ -75,7 +80,15 @@ function App() {
       clickedLetters.includes(letter) ? letter : "_"
     );
   };
-  console.log(letterWord);
+
+  const renderLetterColor = (letter, clickedLetters, letterWord) => {
+    return clickedLetters.includes(letter) && letterWord.includes(letter)
+      ? "green"
+      : clickedLetters.includes(letter) && !letterWord.includes(letter)
+      ? "red"
+      : "white";
+  };
+  console.log(bgColor);
   return (
     <div className="JeuContainer">
       <h1>Jeu du Pendu React</h1>
@@ -90,6 +103,7 @@ function App() {
       <div className="PenduClavier">
         {alphabet.map((letter, index) => (
           <Clavier
+            bgColor={renderLetterColor(letter, clickedLetters, letterWord)}
             key={index}
             letters={letter}
             onClick={evt => handleClick(letter)}
